@@ -3,10 +3,73 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start"
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "lint": "standard --verbose | snazzy",
+    "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all && npm cache clean",
+    "test": "ava",
+    "test:watch": "ava --watch",
+    "coverage": "nyc ava",
+    "tron": "node_modules/.bin/reactotron",
+    "android:build": "cd android && ./gradlew assembleRelease",
+    "android:install": "cd android && ./gradlew assembleRelease && ./gradlew installRelease",
+    "android:hockeyapp": "cd android && ./gradlew assembleRelease && puck -submit=auto app/build/outputs/apk/app-release.apk",
+    "android:devices": "$ANDROID_HOME/platform-tools/adb devices",
+    "android:logcat": "$ANDROID_HOME/platform-tools/adb logcat *:S ReactNative:V ReactNativeJS:V"
   },
   "dependencies": {
-    "react": "15.2.1",
-    "react-native": "0.29.0"
+    "ramda": "^0.21.0",
+    "react": "^15.2.1",
+    "react-native": "^0.29.0",
+    "react-native-drawer": "^2.2.4",
+    "react-native-push-notification": "^1.1.0",
+    "react-native-vector-icons": "^2.0.2",
+    "react-redux": "^4.4.2"
+  },
+  "devDependencies": {
+    "ava": "^0.15.2",
+    "babel-eslint": "^6.1.0",
+    "enzyme": "^2.3.0",
+    "mockery": "^1.7.0",
+    "react-addons-test-utils": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "react-native-mock": "^0.2.3",
+    "reactotron": "^0.6.1",
+    "standard": "^7.1.2"
+  },
+  "babel": {
+    "presets": [
+      "react-native"
+    ],
+    "ignore": false
+  },
+  "ava": {
+    "files": [
+      "util/*.js",
+      "tests/**/*.js",
+      "!tests/setup.js"
+    ],
+    "require": [
+      "react-native-mock/mock.js",
+      "babel-register",
+      "babel-polyfill"
+    ],
+    "babel": {
+      "presets": [
+        "react-native"
+      ]
+    }
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "globals": [
+      "describe",
+      "it",
+      "fetch",
+      "navigator",
+      "__DEV__",
+      "XMLHttpRequest",
+      "FormData"
+    ]
   }
 }
+
