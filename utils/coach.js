@@ -2,8 +2,10 @@ import test from 'ava'
 import moment from 'moment'
 
 export default class Coach {
-  constructor() {
+  constructor(currentTimeFunc) {
     this._rounds = []
+    const defaultCurrentTime = () => moment()
+    this._currentTimeFunc = currentTimeFunc || defaultCurrentTime
   }
 
   get roundCount() {
@@ -30,12 +32,8 @@ export default class Coach {
   }
 
   get remainingTime() {
-    return this.lastRound
-  }
-
-  get remainingTime() {
     let nextGoal = this.lastRound + this.roundGoal
-    return this.currentTime.utc().unix
+    return nextGoal - this.currentTime.utc().unix()
   }
 
   reset() {
@@ -48,7 +46,7 @@ export default class Coach {
   }
 
   get currentTime() {
-    return moment()
+    return this._currentTimeFunc()
   }
 
   start() {

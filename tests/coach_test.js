@@ -33,14 +33,15 @@ test('reset', t => {
 })
 
 test('with no goal set, the goal is the average and knows remaining time', t => {
-  let coach = new coachClass()
+  let currentTimeFunc = () => getTime(210)
+  let coach = new coachClass(currentTimeFunc)
   coach._startTime = getTime(0)
   coach._rounds = [getTime(100), getTime(200)]
 
   t.is(coach.roundGoal, 100)
 
-  //coach.currentTime = getTime(210)
-  //t.is(coach.remainingTime, 90)
+  t.is(coach.currentTime.utc().unix(), getTime(210).utc().unix())
+  t.is(coach.remainingTime, 90)
 })
 
 //test('remaining time', t => {
